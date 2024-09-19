@@ -1,0 +1,199 @@
+type: custom:mushroom-chips-card
+chips:
+  - type: template
+    icon: |-
+      {% if is_state('binary_sensor.alle_turen', 'off') %}
+        mdi:door-closed
+      {% else %}
+        mdi:door-open
+      {% endif %}
+    content: >
+      {% set total = 0 %}
+
+      {% if is_state('binary_sensor.sensor_ture_anthony_offnet', 'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+
+      {% if is_state('binary_sensor.sensor_wohnungsture_offnet', 'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+
+      {% if is_state('binary_sensor.sensor_ture_balkon_wohnzimmer_offnung',
+      'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+
+      ({{total}}) Türe offen
+    icon_color: |-
+      {% if is_state('binary_sensor.alle_turen', 'off') %}
+        grey
+      {% else %}
+        red
+      {% endif %}
+    tap_action:
+      action: call-service
+      service: browser_mod.popup
+      target: {}
+      data:
+        dismissable: true
+        autoclose: false
+        content:
+          type: vertical-stack
+          title: Türen
+          cards:
+            - type: horizontal-stack
+              cards:
+                - type: tile
+                  entity: binary_sensor.sensor_wohnungsture_offnet
+                  name: Wohnungstüre
+                  icon: mdi:door
+                - type: tile
+                  entity: binary_sensor.sensor_ture_anthony_offnet
+                  name: Anthony Balkontüre
+                  icon: mdi:door
+            - type: horizontal-stack
+              cards:
+                - type: tile
+                  entity: binary_sensor.sensor_ture_balkon_wohnzimmer_offnung
+                  name: Wohnzimmer Balkontüre
+                  icon: mdi:door-open
+                  show_entity_picture: false
+                  hide_state: false
+        timeout: 5000
+        title: Türen
+  - type: template
+    icon: |-
+      {% if is_state('binary_sensor.alle_fenster', 'off') %}
+        mdi:door-closed
+      {% else %}
+        mdi:door-open
+      {% endif %}
+    entity: binary_sensor.alle_fenster
+    icon_color: |-
+      {% if is_state('binary_sensor.alle_fenster', 'off') %}
+        grey
+      {% else %}
+        red
+      {% endif %}
+    content: >
+      {% set total = 0 %}
+
+      {% if is_state('binary_sensor.sensor_ture_balkon_wohnzimmer_offnung',
+      'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+
+      {% if is_state('binary_sensor.sensor_wohnungsture_offnet', 'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+
+      {% if is_state('light.wall_light_1', 'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+
+      {% if is_state('light.wall_light_2', 'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+
+      {% if is_state('light.wall_light_3', 'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+
+      ({{total}}) Fenster offen
+    tap_action:
+      action: call-service
+      service: browser_mod.popup
+      target: {}
+      data:
+        dismissable: true
+        autoclose: false
+        content:
+          type: vertical-stack
+          title: Fenster
+          cards:
+            - type: horizontal-stack
+              cards:
+                - type: tile
+                  entity: binary_sensor.sensor_wohnungsture_offnet
+                  name: Wohnungstüre
+                - type: tile
+                  entity: binary_sensor.sensor_wohnungsture_offnet
+                  name: Anthony
+            - type: horizontal-stack
+              cards:
+                - type: tile
+                  entity: binary_sensor.sensor_ture_balkon_wohnzimmer_offnung
+                  name: Wohnzimmer
+                  show_entity_picture: false
+                  hide_state: false
+        timeout: 5000
+        title: Fenster
+  - type: template
+    content: |-
+      {% set total = 0 %}
+      {% if is_state('light.lampe_wc_light', 'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+      {% if is_state('light.lampe_kuche_light', 'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+      {% if is_state('light.licht_2_none', 'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+      {% if is_state('light.lampe_andrew_licht', 'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+      {% if is_state('light.wall_light_3', 'on') %}
+        {% set total = total + 1 %}
+      {% endif %}
+      ({{total}}) Lichter an
+    icon: mdi:lightbulb-group
+    icon_color: |-
+      {% if is_state('light.licht_2_none', 'on') %}
+        orange
+      {% elif is_state("light.living_room", "on") %}
+        orange
+      {% else %}
+        grey
+      {% endif %}
+    tap_action:
+      action: call-service
+      service: browser_mod.popup
+      target: {}
+      data:
+        dismissable: true
+        autoclose: false
+        title: Lichter
+        content:
+          type: vertical-stack
+          title: Lampen
+          cards:
+            - type: horizontal-stack
+              cards:
+                - type: tile
+                  entity: light.licht_2_none
+                  name: Wochnzimmer
+                - type: tile
+                  entity: light.lampe_andrew_licht
+                  tap_action:
+                    action: navigate
+                    navigation_path: /dashboard-2024/andrew
+                  name: Andrew
+            - type: horizontal-stack
+              cards:
+                - type: tile
+                  entity: light.lampe_kuche_light
+                  tap_action:
+                    action: navigate
+                    navigation_path: /dashboard-2024/kuche
+                  name: Küche
+                  show_entity_picture: false
+                  hide_state: false
+                - type: tile
+                  entity: light.lampe_wc_light
+                  tap_action:
+                    action: navigate
+                    navigation_path: /dashboard-2024/wc
+                  name: WC
+        dismiss_action: {}
+        timeout: 5000
